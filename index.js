@@ -15,14 +15,17 @@ import { registerSocketHandlers } from "./socket/socketHandler.js";
 const MONGO_URI = Deno.env.get("MONGO_URI");
 const JWT_SECRET = Deno.env.get("JWT_SECRET");
 const PORT = Number(Deno.env.get("PORT")) || 8000;
-const clientUrl = Deno.env.get("CLIENT_URL") || "http://localhost:5173";
+const allowedOrigins = [
+  Deno.env.get("CLIENT_URL") || "http://localhost:5173",
+  "https://connectly-frontend.vercel.app"
+].filter(Boolean);
 
 const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: clientUrl,
+    origin: allowedOrigins,
     credentials: true
   }
 });
@@ -30,7 +33,7 @@ const io = new Server(server, {
 app.set("io", io);
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-app.use(cors({ origin: clientUrl, credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: "1mb" }));
 app.use("/uploads", express.static(path.resolve("uploads")));
 
