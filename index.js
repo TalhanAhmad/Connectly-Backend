@@ -1,6 +1,5 @@
 import http from "node:http";
 import path from "node:path";
-import cors from "npm:cors";
 import express from "npm:express";
 import helmet from "npm:helmet";
 import { Server } from "npm:socket.io";
@@ -51,7 +50,6 @@ app.use((req, res, next) => {
 
   next();
 });
-app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: "1mb" }));
 app.use("/uploads", express.static(path.resolve("uploads")));
 
