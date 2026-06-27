@@ -34,6 +34,12 @@ app.use(cors({ origin: clientUrl, credentials: true }));
 app.use(express.json({ limit: "1mb" }));
 app.use("/uploads", express.static(path.resolve("uploads")));
 
+app.get("/", (req, res) => {
+  res.json({
+    message: "Backend is running successfully"
+  });
+});
+
 app.get("/health", (req, res) => {
   res.json({ status: "ok", name: "connectly-server" });
 });
