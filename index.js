@@ -1,5 +1,6 @@
 import http from "node:http";
 import path from "node:path";
+import cors from "npm:cors";
 import express from "npm:express";
 import helmet from "npm:helmet";
 import { Server } from "npm:socket.io";
@@ -15,8 +16,9 @@ const MONGO_URI = Deno.env.get("MONGO_URI");
 const JWT_SECRET = Deno.env.get("JWT_SECRET");
 const PORT = Number(Deno.env.get("PORT")) || 8000;
 const allowedOrigins = [
-  Deno.env.get("CLIENT_URL") || "http://localhost:5173",
-  "https://connectly-frontend.vercel.app"
+  Deno.env.get("CLIENT_URL") || "https://connectly-frontend.vercel.app" ,
+  
+  
 ].filter(Boolean);
 
 const app = express();
@@ -32,24 +34,7 @@ const io = new Server(server, {
 app.set("io", io);
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  const isAllowed = origin && allowedOrigins.includes(origin);
-
-  if (isAllowed) {
-    res.header("Access-Control-Allow-Origin", origin);
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Vary", "Origin");
-  }
-
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    return res.sendStatus(204);
-  }
-
-  next();
-});
+app.use(express.json());
 app.use(express.json({ limit: "1mb" }));
 app.use("/uploads", express.static(path.resolve("uploads")));
 
