@@ -16,9 +16,8 @@ const MONGO_URI = Deno.env.get("MONGO_URI");
 const JWT_SECRET = Deno.env.get("JWT_SECRET");
 const PORT = Number(Deno.env.get("PORT")) || 8000;
 const allowedOrigins = [
-  Deno.env.get("CLIENT_URL") || "https://connectly-frontend.vercel.app" ,
-  
-  
+  Deno.env.get("CLIENT_URL") || "https://connectly-frontend.vercel.app",
+  "https://connectly-frontend-git-main-talha-ahmad.vercel.app", // ← add this
 ].filter(Boolean);
 
 const app = express();
